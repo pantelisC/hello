@@ -5,59 +5,54 @@ public class LVList {
 		
 		private String name;
 		private String lvNr;
-		private LvElement next;
+		//private LvElement next;
 	
 		
 		public LvElement(String lvNr, String name){
 			this.name = name;
 			this.lvNr = lvNr;
-			this.next = null;
+			//this.next = null;
 		}
 	
 		public void setName(String name){
 			this.name = name;
 		}
-	
-		public String getName(){
-			return name;
-		}
+
 	
 		public void setLvNr(String lvNr){
 			this.lvNr = lvNr;
+		}
+		
+		public String getName(){
+			return name;
 		}
 	
 		public String getLvNr(){
 			return lvNr;
 		}
-	
-		public void setNext(LvElement next){
-			this.next = next;
-		}
-		
-		public LvElement getNext(){
-			int i, j = 0;
-			j = hashCode();
-		
-			return next;
-		}
-	
-		/*public int h(LvElement k){
-			
-			return (int) k.hashCode();
-		}
-		
-		public void hashF(int k){
-			int i = 0; 
-			int j = 0;
-			
-			if(i >= 0){
-				j=h(k);
-			}else{
-				j = i + j;
-			}
-		}*/
 	}
 	
+	private class DeletedEntry extends LvElement{
+		
+		private DeletedEntry entry = null;
+		
+		private DeletedEntry(){
+			super(null, null);
+			
+		}
+	
+	   private DeletedEntry getUniqueDeletedEntry() {
+
+           if (entry == null)
+
+                 entry = new DeletedEntry();
+
+           return entry;
+
+     }
+	}
+	
+		
 	private LvElement[] hashTable;
 	
 	
@@ -67,35 +62,10 @@ public class LVList {
      public LVList(int power, double loadLimit){
     	 
     	 if(loadLimit <= 1){
-    	 hashTable = new LvElement[(int) Math.pow(2, power)];
+    	 this.hashTable = new LvElement[(int) Math.pow(2, power)];
     	 }
-    	 
-    /*	 if(power > loadLimit){
-    		hashTable = new LV[2*hashTable.length];
-    	}*/
      }
      
-     public int h(LvElement k){
-			return k.hashCode();
-		}
-     
-	private int getPosition(String lvNr){
-		
-		int m = giveLength();
-		LvElement k = null;
-		int i = 0;
-		int j = h(k);
-		int hash = 0;
-		
-		for(int a = 0; a < hashTable.length; a++){
-			
-			if(hashTable[a] != null){
-				j = i + j;
-			}
-		}
-		hash = j % m;
-		return hash;
-	}
 	
 	   private boolean validLvNr(String lvNr){
 	    	 String numbers = "[0-9]+";
@@ -113,122 +83,110 @@ public class LVList {
       */
      public void insert (String lvNr, String name){
     	 
+    	 int hash = (lvNr.hashCode() % hashTable.length);
+    	 DeletedEntry delete = new DeletedEntry();
     	 
-    		/* int i = 0;
-    		 int j = 0;
+    	 int initial = -1;
+    	 int indexDeleted = -1;
+    	 
+    	 if(validLvNr(lvNr)){
+    		 while(hash != initial && (hashTable[hash] == delete.getUniqueDeletedEntry() || hashTable[hash] != null && hashTable[hash].getLvNr() != lvNr)){
     		 
-    		 do{
-    			j = getPosition(lvNr);
-    				if(hashTable[i] == null){
-    					hashTable[i] = new LvElement(lvNr, name);
-    					hashTable[i] = name;
-    				}
-    		 }while(i == hashTable.length);*/
-    			 
-    		 
-    		 
-    		if(hashTable.length > 0 && validLvNr(lvNr) && name.length() > 0){
-    		 LvElement a = new LvElement(lvNr, name);
-    		 LvElement b = new LvElement(lvNr, name);
-    		
-    		 int pos = getPosition(lvNr);
-    		 	
-    		 if(giveName(lvNr).equals("")){
-    			 if(hashTable[pos] == null){
-    				 hashTable[pos] = new LvElement(lvNr, name);
-    				 hashTable[pos].setNext(null);
-    			 }else{
-    				a = hashTable[pos];
-    			 	hashTable[pos] = new LvElement(lvNr, name);
-    			    hashTable[pos].setNext(a);
-    			 }
-    	 }else{
-    		 if(hashTable[pos] != null){
-    			 a = hashTable[pos];
-    			 if(a.getLvNr().equals(lvNr)){
-    				 a.setName(name);
-    			 }else{
-    				 while(a != null && a.getNext() != null){
-    					 b = a.getNext();
-    					 if(b.getLvNr().equals(lvNr)){
-    						 b.setName(name);
-    					 }
-    					 a = b;
-    				 }
-    			 }
+    		 if(initial == -1){
+    			 initial = hash;
     		 }
-    	 }
     		 
-    	 }
+    		 if (hashTable[hash] == delete.getUniqueDeletedEntry()){
+
+                 indexDeleted = hash;
+           
+                 hash = (hash + 1) % hashTable.length;
+           
+    		 }
     		 
+
+             if ((hashTable[hash] == null || hash == initial) && indexDeleted != -1){
+
+                   hashTable[indexDeleted] = new LvElement(lvNr, name);
+
+             }else if (initial != hash){
+
+                   if (hashTable[hash] != delete.getUniqueDeletedEntry() && hashTable[hash] != null && hashTable[hash].getLvNr() == lvNr){
+
+                         hashTable[hash].setName(name);
+                   }
+
+             }else
+
+                         hashTable[hash] = new LvElement(lvNr, name);
+             }   
+       }
      }
+    		 
+    	 
      
      /**
       * delete data with matching lvNr;
       * no action if lvNr not found
       */ 
      public void delete (String lvNr){
-  
-    			if (hashTable.length > 0 && validLvNr(lvNr)){
-    				
-    				int pos = getPosition(lvNr);
-   				
-    				if (hashTable[pos] != null) {
-    					LvElement a = hashTable[pos];
-    					
-    					if (a.getLvNr().equals(lvNr)) {
-    						if (a.getNext() != null)
-    							hashTable[pos] = a.getNext();
-    						else
-    							hashTable[pos] = null;
-    					} else {
-    						while (a != null && a.getNext() != null) {
-    							LvElement b = a.getNext();
-    							if (b.getLvNr().equals(lvNr)) {
-    								if (b.getNext() != null)
-    									a.setNext(b.getNext());
-    								else
-    									a.setNext(null);
-    								break;
-    							}
-    							a = b;
-    						}
-    					}
-    				}
-    			}
-    		}
+    	 
+    	 int hash = (lvNr.hashCode() % hashTable.length);
+     	 DeletedEntry delete = new DeletedEntry();
+         int initialHash = -1;
+         
+         if(validLvNr(lvNr)){
+         
+        	 while (hash != initialHash && (hashTable[hash] == delete.getUniqueDeletedEntry() || hashTable[hash] != null && hashTable[hash].getLvNr() != lvNr)){
+        		 
+        		 if (initialHash == -1){
+                     initialHash = hash;
+        		 }
+               hash = (hash + 1) % hashTable.length;
+        	 }
+        	 
+        	 if (hash != initialHash && hashTable[hash] != null){
+                 hashTable[hash] = delete.getUniqueDeletedEntry();
+        	 }
+         }
+    			
+    }
      
      /**
       * returns the name corresponding to lvNr;
       * returns empty string, if lvNr not found
       */
      public String giveName (String lvNr){
-    	 
- 		if (hashTable.length > 0 && validLvNr(lvNr)) {
- 			int pos = getPosition(lvNr);
- 						
-			if (hashTable[pos] != null) {
-				LvElement a = hashTable[pos];
-				if (a.getLvNr().equals(lvNr)) {
-					return a.getName();
-				} else {
-					while (a != null && a.getNext() != null) {
-						LvElement b = a.getNext();
-						if (b.getLvNr().equals(lvNr)) {
-							return b.getName();
-						}
-						a = b;
-					}
-				}
-			}
-		}
-		return "";
-	}
+    		
+    	 int hash = (lvNr.hashCode() % hashTable.length);
+        	DeletedEntry delete = new DeletedEntry();
+            int initialHash = -1;
+            int i = 0;
+            
+            if(validLvNr(lvNr)){
+        		while (hash != initialHash && (hashTable[hash] == delete.getUniqueDeletedEntry() || hashTable[hash] != null && hashTable[hash].getLvNr() != lvNr)) {
+        			
+        			if (initialHash == -1){
+                        initialHash = hash;
+        			}
+                  
+                  hash = (hash + i) % hashTable.length;
+                  i++;
+            	}
+            }
+            if (hashTable[hash] == null || hash == initialHash){
+                  return null;
+            }else{
+            	return hashTable[hash].getName();
+            }
+     	}
+       
+ 		
      
      /**
       * returns true if the hash table contains no entries
       */
-     public boolean isEmpty (){
+     public boolean isEmpty(){
 
     			for (int i = 0; i < hashTable.length; i++) {
     				if (hashTable[i] != null)
@@ -245,12 +203,7 @@ public class LVList {
     	int count = 0;
  		for (int k = 0; k < giveLength(); k++) {
  			if(hashTable[k] != null) {
- 				LvElement i = hashTable[k];
  				count++;
- 				while (i.getNext() != null) {
- 					i = i.getNext();
- 					count++;
- 				}
  			}
  		}
  		return count;
@@ -272,7 +225,7 @@ public class LVList {
  	 * @return Alle Eintraege in einen Array gespeichert
  	 */
      
-     public String LvEintraege(){
+     /*public String LvEintraege(){
     	 
     	 String eintrag = "";
     	 
@@ -291,7 +244,7 @@ public class LVList {
     			
     	}
     	 return eintrag;
-     }
+     }*/
      
   
      
