@@ -1,31 +1,25 @@
 import java.util.HashMap;
+import java.util.Scanner;
+
 
 public class LVListDemo {
 
+	
 	public static void main(String[] args) {
 		
+		Scanner input = new Scanner(System.in);
+		System.out.println("1 oder 2 Eingeben (1-loadfactor, 2-operatrionen):");
+		int number = input.nextInt();
 		
-		
-	}
-	
-	/*private static LVList.LvElement createLV(int number){
-		
-	}*/
-	
-	
-	private static HashMap<String, String> fuelleMap(int m, int number){
-		
-		HashMap<String, String> map = new HashMap<String, String>(m);
-		for(int i = 0; i < number; i++){
-			LVList.LvElement lv = createLv(i);
+		if(number == 1){
+			
+		}else if(number == 2){
+			
+		}else{
+			System.out.println("wrong input number");
 		}
-		return null;
 	}
-	
-	private static long LoadFactor(){
-		 
-	}
-	
+		
 	
 	
 	private static String[] Operation(int length){
@@ -45,11 +39,40 @@ public class LVListDemo {
 		return operations;
 	}
 	
-	private static LVList.LvElement erstelleLV(String lvNr, String name){
+	/** 
+	 * @param number
+	 * 			number of LV's
+	 * @param lv
+	 * 			first 3 numbers of LvNr which is in every study direction different
+	 * @return LVList.LvElement[] with lvElement	
+	 */
+	
+	private static LVList.LvElement[] createLvForOpertion(int lenght, int lv){
 		
-		
-		
-		return lv;
+		LVList.LvElement[] lvElement = new LVList.LvElement[lenght];
+			
+			for(int i = 0; i < lvElement.length; i++){
+				lvElement[i] = createLv(lv, i);
+			}
+			return lvElement;			
 	}
+	
+	private static LVList.LvElement createLv(int lv, int number){
+			String lvString = String.valueOf(lv);
+			String nr = String.valueOf(number);
+			nr = ("000" + nr).substring(nr.length());
+			
+			LVList.LvElement lvnr = new LVList.LvElement(lvString + nr, nr);
+			return lvnr;
+	}
+	
+	private static LVList fillList(double length, int lv, int number) {
+		LVList a = new LVList(length);
+		for(int i = 0; i < number; i++) {
+			LVList.LvElement lvnr = createLv(lv, i);
+			a.insert(lvnr.getLvNr(), lvnr.getName());
+		}
+		return a;
+	}
+		
 }
-
