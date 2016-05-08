@@ -1,15 +1,77 @@
-
-
+import java.util.Scanner;
 public class LVListDemo {
-    
+    static String lvNr="";
+    static String name="000000";
 	public static void main(String[] args) {
+		Scanner input=new Scanner(System.in);
+	while(true){
+		long beforeSort1;
+		long afterSort1;
+		long nanoSekunden1;
+		int number=input.nextInt();
+	 
+	 if(number==1){
      LVList lvlist1=new LVList(1,0.5);
+     
+     beforeSort1 = System.nanoTime();
+     
+        for(int i=0; i<=1000; i++){
+    	   lvlist1.insert(lvNr, name);
+        }
+        
+     afterSort1 = System.nanoTime();
+     nanoSekunden1 = afterSort1 - beforeSort1;
+     
+     System.out.println(nanoSekunden1);
+     
+	 }else if(number==2){
+     
      LVList lvlist2=new LVList(1,0.75);
+     
+     beforeSort1 = System.nanoTime();
+     
+         for(int i=0; i<=10000; i++){
+    	    lvlist2.insert(lvNr, name);
+          }
+         
+     afterSort1 = System.nanoTime();
+     nanoSekunden1 = afterSort1 - beforeSort1;
+     
+     System.out.println(nanoSekunden1);
+     
+	 }else if(number==3){
+		 
      LVList lvlist3=new LVList(1,0.8);
+     
+     beforeSort1 = System.nanoTime();
+     
+         for(int i=0; i<=100000; i++){
+    	    lvlist3.insert(lvNr, name);
+         }
+         
+     afterSort1 = System.nanoTime();
+     nanoSekunden1 = afterSort1 - beforeSort1;
+     
+     System.out.println(nanoSekunden1);
+     
+	 }else if(number==4){
+		 
+     beforeSort1 = System.nanoTime();
+     
      LVList lvlist4=new LVList(1,0.9);
      
+          for(int i=0; i<=200000; i++){
+    	     lvlist4.insert(lvNr, name);
+          }
           
-          
-	}	
-	
+     afterSort1 = System.nanoTime();
+     nanoSekunden1 = afterSort1 - beforeSort1;
+     
+     System.out.println(nanoSekunden1);
+     
+    }else{
+    	break;
+    }
+   }
+}
 }
