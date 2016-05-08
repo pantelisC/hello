@@ -1,0 +1,228 @@
+public class LVList{
+	    private class LVElement{
+	    	private String nummer;
+	    	private String name;
+            //private LVElement next;
+            
+	    	private LVElement(String nummer,String name){
+	    		this.nummer=nummer;
+	    		this.name=name;
+	    		//this.next = null;
+	    	}
+	    	private void setNummer(String nummer){
+	    		this.nummer=nummer;
+	    	}
+	    	private void setName(String name){
+	    		this.name=name;
+	    	}
+	    	private String getNummer(){
+	    		return nummer;
+	    	}
+	    	private String getName(){
+	    		return name;
+	    	}
+	    	//public void setNext(LVElement next){
+				//this.next = next;
+			//}
+			
+			//public LVElement getNext(){
+				/*int i, j = 0;
+				j = hashCode();*/
+			
+				//return next;
+			//}
+	    }
+	    private class DeletedEntry extends LVElement {
+
+	        private DeletedEntry entry = null;
+
+	   
+
+	        private DeletedEntry() {
+
+	              super(null, null);
+
+	        }
+
+	   
+
+	        private DeletedEntry getUniqueDeletedEntry() {
+
+	              if (entry == null)
+
+	                    entry = new DeletedEntry();
+
+	              return entry;
+
+	        }
+
+	  }
+	   
+	    private LVElement[] hashTable;
+        /**
+        * constructor for a hash table with length 2^power and load limit less or equal 1
+         */
+        public LVList(int power, double loadLimit){
+        	if(loadLimit<=1){
+        	this.hashTable=new LVElement[(int) Math.pow(2, power)];
+        	/*for(int i = 0; i < hashTable.length; i++){
+        		hashTable[i] = null;
+        	}*/
+        	}
+        }
+        
+      
+        /**
+         * insert new data; overwrites data with the same course-id;
+         * if the loadfactor gets greater than loadLimit: the length of the hash table is doubled
+         * both strings have to be not empty!
+         */
+        public void insert (String lvNr, String name){
+        	int hash = (lvNr.hashCode() % hashTable.length);
+        	DeletedEntry deletedEntry=new DeletedEntry();
+            int initialHash = -1;
+
+            int indexOfDeletedEntry = -1;
+            if(validLvNr(lvNr)){
+            while (hash != initialHash && (hashTable[hash] == deletedEntry.getUniqueDeletedEntry() || hashTable[hash] != null && hashTable[hash].getNummer() != lvNr)) {
+
+                  if (initialHash == -1)
+
+                        initialHash = hash;
+                  
+                  if (hashTable[hash] == deletedEntry.getUniqueDeletedEntry()){
+
+                        indexOfDeletedEntry = hash;
+                  
+                  hash = (hash + 1) % hashTable.length;
+                  
+            }
+
+            if ((hashTable[hash] == null || hash == initialHash)
+
+                        && indexOfDeletedEntry != -1)
+
+                  hashTable[indexOfDeletedEntry] = new LVElement(lvNr, name);
+
+             else if (initialHash != hash)
+
+                  if (hashTable[hash] != deletedEntry.getUniqueDeletedEntry()
+
+                             && hashTable[hash] != null && hashTable[hash].getNummer() == lvNr)
+
+                        hashTable[hash].setName(name);
+
+                   else
+
+                        hashTable[hash] = new LVElement(lvNr, name);
+            }   
+            }
+        }
+        
+        /**
+         * delete data with matching lvNr;
+         * no action if lvNr not found
+         */ 
+        public void delete (String lvNr){
+        	int hash = (lvNr.hashCode() % hashTable.length);
+        	DeletedEntry deletedEntry=new DeletedEntry();
+            int initialHash = -1;
+            if(validLvNr(lvNr)){
+            while (hash != initialHash
+
+                        && (hashTable[hash] == deletedEntry.getUniqueDeletedEntry() || hashTable[hash] != null
+
+                                   && hashTable[hash].getNummer() != lvNr)) {
+
+                  if (initialHash == -1)
+
+                        initialHash = hash;
+
+                  hash = (hash + 1) % hashTable.length;
+                  
+            }
+
+            if (hash != initialHash && hashTable[hash] != null)
+
+                  hashTable[hash] = deletedEntry.getUniqueDeletedEntry();
+        }
+        }
+        /**
+         * returns the name corresponding to lvNr;
+         * returns empty string, if lvNr not found
+         */
+        public String giveName (String lvNr){
+        	int hash = (lvNr.hashCode() % hashTable.length);
+        	DeletedEntry deletedEntry=new DeletedEntry();
+            int initialHash = -1;
+            int i=0;
+            if(validLvNr(lvNr)){
+            while (hash != initialHash
+
+                        && (hashTable[hash] == deletedEntry.getUniqueDeletedEntry() || hashTable[hash] != null
+
+                                   && hashTable[hash].getNummer() != lvNr)) {
+
+                  if (initialHash == -1)
+
+                        initialHash = hash;
+
+                  hash = (hash + i) % hashTable.length;
+                  i++;
+            }
+            }
+            if (hashTable[hash] == null || hash == initialHash)
+
+                  return null;
+
+            else
+
+                  return hashTable[hash].getName();
+        }
+        
+        
+        /**
+         * returns true if the hash table contains no entries
+         */
+        public boolean isEmpty (){
+        	for(int i=0; i<hashTable.length; i++){
+        		if(hashTable[i]==null){
+        			continue;
+        		}else if(hashTable[i]!=null){
+        			return false;
+        			
+        		}
+        	}
+			return true;
+        	}
+        	
+        
+        /**
+         * returns the number of entries in the hash table
+         */
+        public int numberOfEntries (){
+        	int count=0;
+        	for(int i=0; i<hashTable.length; i++){
+        		if(hashTable[i]!=null){
+        			count++;
+        		}
+        	}
+        	return count;
+        }
+
+        /**
+         * returns the length of the hash table
+         */
+        public int giveLength (){
+        	return hashTable.length;
+        	
+        }
+        private boolean validLvNr(String lvNr){
+	    	 String numbers = "[0-9]+";
+	    	 
+	    	 if(lvNr.length() == 6 && lvNr.matches(numbers)){
+	    		 return true;
+	    	 }else 
+	    		 return false;
+	     }
+}
