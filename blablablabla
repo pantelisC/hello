@@ -86,10 +86,10 @@ public class LVList{
             if(validLvNr(lvNr)){
             while (hash != initialHash && (hashTable[hash] == deletedEntry.getUniqueDeletedEntry() || hashTable[hash] != null && hashTable[hash].getNummer() != lvNr)) {
 
-                  if (initialHash == -1)
+                  if (initialHash == -1){
 
                         initialHash = hash;
-                  
+                  }
                   if (hashTable[hash] == deletedEntry.getUniqueDeletedEntry()){
 
                         indexOfDeletedEntry = hash;
@@ -100,21 +100,23 @@ public class LVList{
 
             if ((hashTable[hash] == null || hash == initialHash)
 
-                        && indexOfDeletedEntry != -1)
+                        && indexOfDeletedEntry != -1){
 
                   hashTable[indexOfDeletedEntry] = new LVElement(lvNr, name);
 
-             else if (initialHash != hash)
+            }else if (initialHash != hash){
 
                   if (hashTable[hash] != deletedEntry.getUniqueDeletedEntry()
 
-                             && hashTable[hash] != null && hashTable[hash].getNummer() == lvNr)
+                             && hashTable[hash] != null && hashTable[hash].getNummer() == lvNr){
 
                         hashTable[hash].setName(name);
 
-                   else
+                  }else{
 
                         hashTable[hash] = new LVElement(lvNr, name);
+                  }
+            }
             }   
             }
         }
@@ -134,17 +136,18 @@ public class LVList{
 
                                    && hashTable[hash].getNummer() != lvNr)) {
 
-                  if (initialHash == -1)
+                  if (initialHash == -1){
 
                         initialHash = hash;
-
+                  }
                   hash = (hash + 1) % hashTable.length;
                   
             }
 
-            if (hash != initialHash && hashTable[hash] != null)
+            if (hash != initialHash && hashTable[hash] != null){
 
                   hashTable[hash] = deletedEntry.getUniqueDeletedEntry();
+            }
         }
         }
         /**
@@ -163,23 +166,23 @@ public class LVList{
 
                                    && hashTable[hash].getNummer() != lvNr)) {
 
-                  if (initialHash == -1)
+                  if (initialHash == -1){
 
                         initialHash = hash;
-
+                  }
                   hash = (hash + i) % hashTable.length;
                   i++;
             }
             }
-            if (hashTable[hash] == null || hash == initialHash)
+            if (hashTable[hash] == null || hash == initialHash){
 
                   return null;
 
-            else
+            }else{
 
                   return hashTable[hash].getName();
         }
-        
+        }
         
         /**
          * returns true if the hash table contains no entries
