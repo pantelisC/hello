@@ -1,0 +1,15 @@
+
+
+public class LVListDemo {
+    
+	public static void main(String[] args) {
+     LVList lvlist1=new LVList(1,0.5);
+     LVList lvlist2=new LVList(1,0.75);
+     LVList lvlist3=new LVList(1,0.8);
+     LVList lvlist4=new LVList(1,0.9);
+     
+          
+          
+	}	
+	
+}
